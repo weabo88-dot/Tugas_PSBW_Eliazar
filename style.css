@@ -1,0 +1,60 @@
+
+body {
+    background-color: #0b0b0b;
+    color: #d1d1d1;
+    font-family: 'Special Elite', monospace;
+}
+
+h1, h2, h3, .navbar-brand {
+    font-family: 'Cinzel', serif;
+    letter-spacing: 2px;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px #000;
+}
+
+.navbar {
+    border-bottom: 1px solid #333;
+    background-color: #121212 !important;
+}
+
+.card, .table, .modal-content {
+    background-color: #161616;
+    color: #e0e0e0;
+    border: 1px solid #333;
+}
+
+.table-dark-custom {
+    color: #fff;
+    background-color: #1a1a1a;
+    border-color: #444;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #262626;
+    color: #ffffff;
+}
+
+/* --- ANIMASI TEKS --- */
+@keyframes gothic-flicker {
+    0% { opacity: 0.4; }
+    50% { opacity: 1; }
+    100% { opacity: 0.4; }
+}
+
+.gothic-quote {
+    animation: gothic-flicker 3s infinite;
+    color: #b0b0b0;
+    font-style: italic;
+}
+
+.floating-meme {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    width: 140px;
+    background-color: #161616;
+    border: 1px solid #444;
+    padding: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+}
