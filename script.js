@@ -8,80 +8,70 @@ const daftarNilai = [
     { kode: "14823153", matkul: "Teknologi Informasi dan Aplikasi Bisnis Berkembang", semester: 2, sks: 3, nilaiHuruf: "B", nk: 9.00 }
 ];
 
+$(function () {
+    const $tabelBody =$("#tabelNilaiBody");
 
-const tabelBody = document.querySelector("#tabelNilaiBody");
+    function renderTabel(data) {
+        $tabelBody.empty();
+        data.forEach((item, index) => {
+            const barisHtml = `
+                <tr>
+                    <td>${index + 1}.</td>
+                    <td>${item.kode}</td>
+                    <td class="text-start">${item.matkul}</td>
+                    <td>${item.semester}</td>
+                    <td>${item.sks}</td>
+                    <td>${item.nilaiHuruf}</td>
+                    <td>${item.nk.toFixed(2)}</td>
+                </tr>
+            `;
+            $tabelBody.append(barisHtml);
+        });
+    }
 
-function renderTabel(data) {
-    tabelBody.innerHTML = "";
-    data.forEach((item, index) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>${index + 1}.</td>
-            <td>${item.kode}</td>
-            <td class="text-start">${item.matkul}</td>
-            <td>${item.semester}</td>
-            <td>${item.sks}</td>
-            <td>${item.nilaiHuruf}</td>
-            <td>${item.nk.toFixed(2)}</td>
-        `;
-        tabelBody.append(tr);
-    });
-}
+    renderTabel(daftarNilai);
 
-
-renderTabel(daftarNilai);
-
-
-const inputCari = document.querySelector("#inputCari");
-if (inputCari) {
-    inputCari.addEventListener("keyup", (e) => {
-        const keyword = e.target.value.toLowerCase();
-        const hasilFilter = daftarNilai.filter(item => item.matkul.toLowerCase().includes(keyword));
+    $("#inputCari").on("keyup", function () {
+        const keyword = $(this).val().toLowerCase();
+        const hasilFilter = daftarNilai.filter(item => 
+            item.matkul.toLowerCase().includes(keyword)
+        );
         renderTabel(hasilFilter);
     });
-}
 
+    $("#formTugas").on("submit", function (e) {
+        e.preventDefault(); 
 
-const formTugas = document.querySelector("#formTugas");
-const namaTugas = document.querySelector("#namaTugas");
-const pesanValidasi = document.querySelector("#pesanValidasi");
-const listTugas = document.querySelector("#listTugas");
-
-if (formTugas) {
-    formTugas.addEventListener("submit", (e) => {
-        e.preventDefault(); // Mencegah form melakukan reload halaman secara default[cite: 96, 97, 101]
+        const $inputNama =$("#namaTugas");
+        const $pesanValidasi =$("#pesanValidasi");
+        const $listTugas =$("#listTugas");
         
-        const nilaiInput = namaTugas.value.trim();
+        const nilaiInput = $inputNama.val().trim();
 
         if (nilaiInput.length < 3) {
-            pesanValidasi.textContent = "Nama tugas minimal harus 3 karakter!";
-            pesanValidasi.classList.add("text-danger");    // Menggunakan classList, bukan style inline
-            pesanValidasi.classList.remove("text-success");
+            $pesanValidasi.text("Nama tugas minimal harus 3 karakter!");
+            $pesanValidasi.removeClass("text-success").addClass("text-danger");
         } else {
-            pesanValidasi.textContent = "Berhasil menambahkan tugas: " + nilaiInput;
-            pesanValidasi.classList.add("text-success");
-            pesanValidasi.classList.remove("text-danger");
+            $pesanValidasi.text("Berhasil menambahkan tugas: " + nilaiInput);
+            $pesanValidasi.removeClass("text-danger").addClass("text-success");
 
-            // Membuat elemen list baru dengan createElement
-            const li = document.createElement("li");
-            li.textContent = nilaiInput;
-            li.className = "list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center";
-            
-            listTugas.append(li);
-            formTugas.reset();
+            $pesanValidasi.hide().fadeIn(300).delay(2000).fadeOut(300);
+
+            const itemHtml = `
+                <li class="list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center">
+                    <span>${nilaiInput}</span>
+                    <button class="btn btn-outline-danger btn-sm btn-hapus">Hapus</button>
+                </li>
+            `;
+            $listTugas.append(itemHtml);
+
+            $inputNama.val("");
         }
     });
-}
 
-function hitungRataRataNK(data) {
-    let totalNK = 0;
-    for (const item of data) {
-        totalNK += item.nk; 
-    }
-    return totalNK / data.length;
-}
-
-console.log("=== REKAPITULASI NILAI MAHASISWA ===");
-console.log("Nama: Eliazar Yasta Prarindra | NBI: 1482500005");
-let rataRata = hitungRataRataNK(daftarNilai);
-console.log(`Rata-rata Nilai Kualitas: ${rataRata.toFixed(2)}`);
+    $("#listTugas").on("click", ".btn-hapus", function () {
+        $(this).closest("li").fadeOut(200, function () {
+            $(this).remove();
+        });
+    });
+});
